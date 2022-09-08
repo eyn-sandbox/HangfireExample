@@ -1,3 +1,6 @@
+﻿using Hangfire;
+using Hangfire.PostgreSql;
+
 namespace HangfireExampleWeb
 {
     public class Program
@@ -13,6 +16,9 @@ namespace HangfireExampleWeb
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddHangfire(config =>
+                config.UsePostgreSqlStorage("Host=192.168.88.47;Database=postgres;Username=testuser;Password=testpass"));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -24,7 +30,9 @@ namespace HangfireExampleWeb
 
             app.UseAuthorization();
 
-
+            app.UseHangfireServer();
+            app.UseHangfireDashboard();
+            
             app.MapControllers();
 
             app.Run();
